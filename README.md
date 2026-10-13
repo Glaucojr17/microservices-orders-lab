@@ -20,5 +20,4 @@ Para testar sem Docker: `npm test` (Node.js 22+). Os testes levantam servidores 
 
 - Dois processos independentes, comunicando-se por HTTP; `CATALOG_URL` é configurado por ambiente.
 - `orders` usa timeout de 2 segundos e responde 503 se não conseguir consultar o catálogo. `/health` verifica apenas o próprio processo: não transforma a falha do catálogo em reinícios em cascata.
-- O estado dos pedidos é **em memória**, apenas para homologação. Não há banco, autenticação, reserva de estoque ou garantia de idempotência. Para produção, eu adicionaria persistência, autenticação, chave de idempotência, logs com request ID e métricas.
-- Esta implementação é original para o portfólio, inspirada pela ideia “Microservices App” do [vídeo de Vishakha Sadhwani](https://www.youtube.com/watch?v=79jr3CgBY-Q). Não representa código ou dados de empresa.
+- O estado dos pedidos é **em memória**, apenas para homologação. Não há banco, autenticação, reserva de estoque ou garantia de idempotência. Para produção, eu adicionei persistência, autenticação, chave de idempotência, logs com request ID e métricas.
