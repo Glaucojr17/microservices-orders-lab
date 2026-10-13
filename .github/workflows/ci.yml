@@ -1,0 +1,17 @@
+name: Validar microsserviços
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '24' }
+      - run: npm test
+      - run: docker compose config --quiet
+      - run: docker compose up -d --build --wait
+      - name: Testar fluxo via rede Compose
+        run: |
+          curl --fail --retry 5 --retry-delay 2 -H 'Content-Type: application/json' -d '{"productId":"mouse","quantity":2}' http://localhost:3002/orders | grep '"totalCents":25980'
+      - if: always()
+        run: docker compose down --volumes

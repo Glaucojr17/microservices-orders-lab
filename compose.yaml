@@ -1,0 +1,24 @@
+services:
+  catalog:
+    build:
+      context: .
+      args: { SERVICE: catalog }
+    environment: { PORT: '3001' }
+    healthcheck:
+      test: [CMD, node, -e, "fetch('http://localhost:3001/health').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"]
+      interval: 5s
+      retries: 5
+  orders:
+    build:
+      context: .
+      args: { SERVICE: orders }
+    environment:
+      PORT: '3002'
+      CATALOG_URL: http://catalog:3001
+    ports: ['3002:3002']
+    depends_on:
+      catalog: { condition: service_healthy }
+    healthcheck:
+      test: [CMD, node, -e, "fetch('http://localhost:3002/health').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"]
+      interval: 5s
+      retries: 5
